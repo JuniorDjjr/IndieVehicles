@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="IndieVehicles.cpp" />
+    <ClCompile Include="IndieVehHandlings\IndieVehHandlingsAPI.cpp">
+      <Filter>Handlings</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ExtendedHandling.h">
+      <Filter>Handlings</Filter>
+    </ClInclude>
+    <ClInclude Include="IndieVehHandlings\IndieVehHandlingsAPI.h">
+      <Filter>Handlings</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Handlings">
+      <UniqueIdentifier>{947b52a3-51b6-4ebe-9607-0d21bcaf324d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
