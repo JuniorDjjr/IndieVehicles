@@ -9,7 +9,7 @@ using namespace std;
 using namespace plugin;
 using namespace injector;
 
-const int BUILD_NUMBER = 11;
+const int BUILD_NUMBER = 13;
 
 class ExtraData {
 public:
@@ -113,31 +113,36 @@ public:
 		MakeInline<0x00535300, 0x00535330>([](reg_pack& regs)
 		{
 			CEntity *entity = (CEntity *)regs.ecx;
+			CColModel *colModel = nullptr;
+			CBaseModelInfo *modelInfo = nullptr;
 
 			if (entity->m_nType == eEntityType::ENTITY_TYPE_VEHICLE)
 			{
-				char defaultVehicleColID = reinterpret_cast<CVehicle*>(entity)->m_nSpecialColModel;
-				if (defaultVehicleColID >= 0)
+				unsigned char defaultVehicleColID = reinterpret_cast<CVehicle*>(entity)->m_nSpecialColModel;
+				if (defaultVehicleColID != 255)
 				{
-					regs.eax = (uint32_t)&CVehicle::m_aSpecialColModel[defaultVehicleColID];
+					colModel = &CVehicle::m_aSpecialColModel[defaultVehicleColID];
 				}
 				else
 				{
 					ExtraData &xdata = extraInfo.Get(reinterpret_cast<CVehicle*>(entity));
 					if (&xdata != nullptr && xdata.flags.bCollModel)
 					{
-						regs.eax = (uint32_t)xdata.colModel;
+						colModel = xdata.colModel;
 					}
 					else
 					{
-						regs.eax = (uint32_t)CModelInfo::GetModelInfo(entity->m_nModelIndex)->m_pColModel;
+						modelInfo = CModelInfo::GetModelInfo(entity->m_nModelIndex);
+						if (modelInfo) colModel = modelInfo->m_pColModel;
 					}
 				}
 			}
 			else
 			{
-				regs.eax = (uint32_t)CModelInfo::GetModelInfo(entity->m_nModelIndex)->m_pColModel;
+				modelInfo = CModelInfo::GetModelInfo(entity->m_nModelIndex);
+				if (modelInfo) colModel = modelInfo->m_pColModel;
 			}
+			regs.eax = (uint32_t)colModel;
 		});
 
 		// CBike::SetupSuspensionLines
